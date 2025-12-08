@@ -130,7 +130,6 @@
   <ItemGroup>
     <None Include="basic.frag" />
     <None Include="basic.vert" />
-    <None Include="door.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

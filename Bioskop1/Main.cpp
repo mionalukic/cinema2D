@@ -104,12 +104,11 @@ void generatePeople()
 
         Person p;
 
-        // ulazna pozicija
         p.x = -1.15f;
         p.y = 0.70f;
 
         // random delay
-        p.startDelay = (rand() % 1200) / 1000.0f;   // 0–1.2 sec
+        p.startDelay = (rand() % 1200) / 1000.0f;  
         // različite brzine
         p.personalSpeed = 0.0025f + (rand() % 1500) / 1000000.0f;
         // malo odstupanje levo-desno
@@ -202,7 +201,6 @@ void startPeopleExit()
         p.targetX = -0.95f;
         p.targetY = 0.70f;
 
-        // konačno — kroz vrata
     }
 }
 
@@ -228,7 +226,6 @@ bool updatePeopleExitingAndCheckAllOut()
         }
         else if (p.stage == 2)
         {
-            // kroz vrata napolje
             if (p.x > -1.15f)
                 p.x -= p.speed;
         }
@@ -325,8 +322,8 @@ void preprocessTexture(unsigned& texture, const char* filepath) {
 
     glGenerateMipmap(GL_TEXTURE_2D);
    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // S - tekseli po x-osi
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // T - tekseli po y-osi
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); 
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -390,9 +387,7 @@ int main()
     };
 
 
-
-
-    // Vrata u gornjem levom uglu – uska, 1 cm visine, malo spuštena
+    // Vrata 
     float doorVertices[] = {
         -1.0f,  0.80f,    0.55f, 0.27f, 0.07f, 1.0f,   // gornji levi (šarka)
         -1.0f,  0.60f,   0.55f, 0.27f, 0.07f, 1.0f,   // donji levi
@@ -402,8 +397,6 @@ int main()
         -0.98f, 0.80f,    0.55f, 0.27f, 0.07f, 1.0f,   // gornji desni
         -0.98f, 0.60f,   0.55f, 0.27f, 0.07f, 1.0f    // donji desni
     };
-
-
 
     float seatVertices[] = {
         // x,     y,    u,   v
@@ -426,7 +419,6 @@ int main()
     };
 
     float bottomImageVertices[] = {
-        // x,      y,       u,    v
         -0.3f, -1.0f,    0.0f, 0.0f,
          0.3f, -1.0f,    1.0f, 0.0f,
          0.3f, -0.75f,    1.0f, 1.0f,
@@ -437,7 +429,6 @@ int main()
     };
 
     float nameVertices[] = {
-        //   x       y       u   v
          0.7f, -1.0f,   0.0f, 0.0f,
          1.0f, -1.0f,   1.0f, 0.0f,
          1.0f, -0.75f,  1.0f, 1.0f,
@@ -462,7 +453,6 @@ int main()
 
 
     //sivi pravugaonik
-
     unsigned int overlayVAO, overlayVBO;
     glGenVertexArrays(1, &overlayVAO);
     glGenBuffers(1, &overlayVBO);
@@ -478,7 +468,6 @@ int main()
     glEnableVertexAttribArray(1);
 
     //platno
- 
     unsigned int screenVAO, screenVBO;
     glGenVertexArrays(1, &screenVAO);
     glGenBuffers(1, &screenVBO);
@@ -494,7 +483,6 @@ int main()
     glEnableVertexAttribArray(1);
     
     //vrata
- 
     unsigned int doorVAO, doorVBO;
     glGenVertexArrays(1, &doorVAO);
     glGenBuffers(1, &doorVBO);
@@ -508,7 +496,6 @@ int main()
 
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
 
 
     //sediste
@@ -626,10 +613,11 @@ int main()
 
     generateSeats(seatsPerRow);
 
-
+    const double TARGET_FPS = 75.0;
+    const double FRAME_TIME = 1.0 / TARGET_FPS;
+    double lastTime = glfwGetTime();
     while (!glfwWindowShouldClose(window))
     {
-        // --- input + tipična logika ---
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
@@ -660,7 +648,6 @@ int main()
             keyPressed = false;
         }
 
-        // State-driven updates
         if (appState == PEOPLE_ENTERING)
         {
             updatePeopleEntering();
@@ -679,7 +666,6 @@ int main()
                 currentFilmG = static_cast<float>(rand()) / RAND_MAX;
                 currentFilmB = static_cast<float>(rand()) / RAND_MAX;
 
-                // update screenVBO boja (6 verteksa, svaki ima 4 color vrednosti na offsetu)
                 float updatedScreenVertices[36];
                 // kopiramo pozicije iz originalnog screenVertices, menjamo boje
                 // originalno screenVertices ima 6 vrhova * 6 vrednosti (x,y,r,g,b,a)
@@ -709,9 +695,7 @@ int main()
             double now = glfwGetTime();
             if (now - filmStartTime >= 20.0)
             {
-                //std::cout << now-filmStartTime << std::endl;
-
-                // kraj filma
+              
                 float whiteScreen[36];
                 float coords[6][2] = {
                     {-0.8f,  0.95f},
@@ -749,7 +733,7 @@ int main()
         }
         else if (appState == RESETTING)
         {
-            // vrati overlay/pravougaonik u početno stanje (vidljiv)
+            // vrati overlay/pravougaonik u početno stanje 
             overlayVisible = true;
             targetY = 0.0f;
             peopleGenerated = false;
@@ -757,13 +741,11 @@ int main()
             appState = IDLE;
             for (int i = seats.size() - 1; i >= 0; i--)
                 seats[i].state = FREE;
-            // po potrebi ostavi sedista u stanju koje su bila (rezervacije ostaju)
         }
 
         // Animacije
         doorAngle += (targetDoorAngle - doorAngle) * 0.1f;
 
-        // crtanje scena (bez izmena) - samo zovemo tvoj postojeći draw kod
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(basicShader);
@@ -857,8 +839,8 @@ int main()
             {
                 if (!numberKeyPressed[index])
                 {
-                    numberKeyPressed[index] = true;  // markiraj da je obraden
-                    buySeat(index, seatsPerRow);                  // pozovi samo JEDNOM
+                    numberKeyPressed[index] = true; 
+                    buySeat(index, seatsPerRow);                  // pozovi samo jednom
                 }
             }
             else
@@ -883,6 +865,17 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
+
+        double now = glfwGetTime();
+        double delta = now - lastTime;
+
+        if (delta < FRAME_TIME) {
+            while (glfwGetTime() < lastTime + FRAME_TIME) {
+                // čekaj
+            }
+        }
+
+        lastTime = glfwGetTime();
 
 
         glfwSwapBuffers(window);
