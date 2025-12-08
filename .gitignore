@@ -1,0 +1,33 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build directories
+Debug/
+Release/
+x64/
+ipch/
+
+# NuGet packages
+packages/
+
+# Compiler outputs
+*.obj
+*.exe
+*.ilk
+*.log
+*.tlog
+*.pdb
+*.idb
+
+# Caches
+*.db
+*.opendb
+*.VC.db*
+
+# Misc
+*.cache
+*.temp
