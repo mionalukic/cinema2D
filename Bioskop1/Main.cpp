@@ -241,7 +241,7 @@ bool updatePeopleExitingAndCheckAllOut()
 
 void mouseClick(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && appState==IDLE)
     {
         double x, y;
         glfwGetCursorPos(window, &x, &y);
@@ -621,7 +621,7 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
-        if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && appState==IDLE )
         {
             if (!keyPressed)
             {
